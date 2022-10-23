@@ -21,18 +21,21 @@ usuariosGet = async(req = request,res = response)=>{
 }
 
 usuariosPut = async(req = request,res = response)=>{
+    //Todo: Hacer las validaciones desde la ruta
 
     const {id} = req.params;
     const {_id, contraseña,google,correo,rol, ...resto} = req.body;
 
-    if(contraseña){
+    
+
+     if(contraseña){
         const salt = bcrypt.genSaltSync(10);
         resto.contraseña =  bcrypt.hashSync(contraseña,salt);
     }
 
     const usuario = await Usuario.findByIdAndUpdate(id, resto)
 
-    res.json(usuario);
+    res.json(usuario); 
 }
 
 usuariosPost = async(req = request,res = response)=>{

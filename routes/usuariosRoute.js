@@ -1,7 +1,7 @@
 const express = require('express');
 const {check,query} = require("express-validator")
 
-const{ emailExiste, rolExiste } = require('../helpers/db-validaciones')
+const{ emailExiste, rolExiste, existeUsuarioID } = require('../helpers/db-validaciones')
 const {validarCampos} = require('../middlewares/validar-campos')
 
 
@@ -22,7 +22,10 @@ router.get('/',[
 ],usuariosGet)
 
 router.put('/:id',[
-    
+    check('id', 'No es un id válido').isMongoId(),
+    check('id').custom(existeUsuarioID),
+    check('rol').custom(rolExiste),
+    validarCampos
 ],
  usuariosPut)
 
