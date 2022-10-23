@@ -1,5 +1,6 @@
 const express = require('express');
 const cors    = require('cors');
+const database = require('../config/db');
 
 class Server {
     constructor(){
@@ -7,9 +8,15 @@ class Server {
         this.port = process.env.port;
         this.usuariosRoute = '/api/usuarios';
 
+        this.conectarDb();
+
         this.middlewares();
 
         this.routes();
+    }
+
+    async conectarDb(){
+        await database();
     }
 
     middlewares(){
