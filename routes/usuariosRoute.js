@@ -16,9 +16,15 @@ const {
 //Inicializo el router
 const router = express.Router();
 
-router.get('/', usuariosGet)
+router.get('/',[
+    query('limite',"El valor del 'limite' debe ser númerico").isNumeric().optional(),
+    query('Desde', "El valor 'desde' debe ser númerico").isNumeric().optional(),
+],usuariosGet)
 
-router.put('/:id', usuariosPut)
+router.put('/:id',[
+    
+],
+ usuariosPut)
 
 router.post('/',[
     //Middlewares

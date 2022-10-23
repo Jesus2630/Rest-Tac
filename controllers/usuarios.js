@@ -2,14 +2,37 @@ const bcrypt = require('bcryptjs')
 const {request,response} = require('express')
 const Usuario = require('../models/Usuario')
 
-usuariosGet = (req = request,res = response)=>{
-    res.send("Soy el get perro")
+usuariosGet = async(req = request,res = response)=>{
+    const {limite = 5, desde = 0} = req.query;
+    const query = {estado:true}
+
+    const [total,usuarios] = await Promise.all([
+        Usuario.countDocuments(query),
+        Usuario.find(query)
+        .skip(Number(desde))
+        .limit(Number(limite))
+    ])
+
+    res.json({
+        total,
+        usuarios
+    })
+
 }
 
-usuariosPut = (req = request,res = response)=>{
-    res.json({
-        msg:"Soy el put"
-    })
+usuariosPut = async(req = request,res = response)=>{
+
+    const {id} = req.params;
+    const {_id, contraseña,google,correo,rol, ...resto} = req.body;
+
+    if(contraseña){
+        const salt = bcrypt.genSaltSync(10);
+        resto.contraseña =  bcrypt.hashSync(contraseña,salt);
+    }
+
+    const usuario = await Usuario.findByIdAndUpdate(id, resto)
+
+    res.json(usuario);
 }
 
 usuariosPost = async(req = request,res = response)=>{
