@@ -61,8 +61,15 @@ usuariosPost = async(req = request,res = response)=>{
     })
 }
 
-usuariosDelete = (req = request,res = response)=>{
-    res.send("Soy el delete perro")
+usuariosDelete = async(req = request,res = response)=>{
+    const {id} = req.params;
+
+    const usuario = await Usuario.findByIdAndUpdate(id, {estado: false});
+
+    res.json({
+        msg: "Usuario borrado",
+        usuario
+    })
 }
 
 module.exports = {
